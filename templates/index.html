@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shoppers</title>
+
+    <script>
+      var server_url = 'http://192.168.1.6:5500/api';
+    </script>
+
+    <style>
+      #server_resp{
+        border: 1px solid grey;
+        background-color: #c8fad8;
+        width: 96%;
+        padding: 0.5%;
+        float: left;
+      }
+
+      #box_form{
+        border: 1px solid grey;
+        width: 96%;
+        padding: 1%;
+        margin-top: 2%;
+        float: left;
+      }
+      #table1{
+        width:100%;
+        border: 0px solid grey;
+      }
+      #table1 td{
+        border: 1px solid grey;
+        font-size: 22px;
+        text-align: center;
+      }
+      #table1 th{
+        border: 1px solid darkgray;
+        font-size: 18px;
+        text-align: center;
+        background-color: grey;
+        color: white;
+
+      }
+      #table1 td b{
+        color: blue;
+      }
+
+    </style>
+</head>
+<body>
+  <div align="center" style="width:100%; float: left;">
+    <span style='font-size: 20px;color:grey;'>Online Shoppers Purchasing Intention</span>
+  </div>
+
+  <div id='server_resp' align="center">
+    <b>Response of Logistics Regression Model (Deployed in Web Server)</b><br>
+    <table id='table1'>
+      <tr>
+        <th>Predicted Class</th>
+        <th>Probability (No Buy)</th>
+        <th>Probability (Buy)</th>
+      </tr>
+      <tr>
+        <td><b id="predicted_class"></b></td>
+        <td><b id="prob0"></b></td>
+        <td><b id="prob1"></b></td>
+      </tr>
+    </table>
+  </div>
+
+  <div align="center" id='server_msg' style="width:100%; float: left;">
+    <!--<img src="{{url_for('static', filename='apple.png')}}" height='30' align="middle" />-->
+    <span id='server_msg_intention' style="float:left;width: 45%; font-size: 16"></span>
+    <span id='server_msg_strategy' style="float:right;width: 45%; font-size: 16;"></span>
+  </div>
+
+  <div id='box_form'>
+    <form id="myForm">
+      
+        <label for="field1">Administrative:</label>
+        <input type="text" id="field1" name="field1" value="3"><br><br>
+        <div id="slider1"></div>
+
+        <hr>
+
+        <label for="field2">ProductRelated_Duration:</label>
+        <input type="text" id="field2" name="field2" value="8000"><br><br>
+        <div id="slider2"></div><br>
+
+        <hr>
+
+        <label for="field3">BounceRates:</label>
+        <input type="text" id="field3" name="field3" value="0.1"><br><br>
+        <div id="slider3"></div><br>
+
+        <hr>
+
+        <label for="field4">PageValues:</label>
+        <input type="text" id="field4" name="field4" value="20"><br><br>
+        <div id="slider4"></div><br>
+
+        <hr>
+
+        <label for="field5">SpecialDay:</label>
+        <input type="radio" id="spl_0" name="field5" value="0"> 0.0
+        <input type="radio" id="spl_2" name="field5" value="0.2" checked> 0.2
+        <input type="radio" id="spl_4" name="field5" value="0.4"> 0.4
+        <input type="radio" id="spl_6" name="field5" value="0.6"> 0.6
+        <input type="radio" id="spl_8" name="field5" value="0.8"> 0.8
+        <input type="radio" id="spl_10" name="field5" value="1"> 1.0
+        
+        <hr>
+
+        <label for="field6">Month:</label>
+        <input type="radio" id="month_feb" name="field6" value="2"> Feb
+        <input type="radio" id="month_mar" name="field6" value="3"> Mar
+        <input type="radio" id="month_may" name="field6" value="5" checked> May
+        <input type="radio" id="month_jun" name="field6" value="6"> Jun
+        <input type="radio" id="month_jul" name="field6" value="7"> Jul
+        <input type="radio" id="month_aug" name="field6" value="8"> Aug
+        <input type="radio" id="month_sep" name="field6" value="9"> Sep
+        <input type="radio" id="month_oct" name="field6" value="10"> Oct
+        <input type="radio" id="month_nov" name="field6" value="11"> Nov
+        <input type="radio" id="month_dec" name="field6" value="12"> Dec
+
+        <hr>
+
+        <!-- Hidden input fields to hold slider values -->
+        <input type="hidden" id="slider1Value" name="slider1Value" value="50">
+        <input type="hidden" id="slider2Value" name="slider2Value" value="50">
+
+        <br>
+    </form>
+  </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    <script>
+      $(document).ready(function(){
+
+          $('#slider1').slider({
+                min: 0,
+                max: 27,
+                value: 3,
+                slide: function(event, ui){
+                    $('#field1').val(ui.value);
+                    $('#slider1Value').val(ui.value);
+                    $('#myForm').submit();
+                }
+            });
+
+            $('#slider2').slider({
+                min: 0,
+                max: 64000,
+                value: 8000,
+                slide: function(event, ui){
+                    $('#field2').val(ui.value);
+                    $('#slider2Value').val(ui.value);
+                    $('#myForm').submit();
+                }
+            });
+
+            $('#slider3').slider({
+                min: 0,
+                max: 20,
+                value: 10,
+                slide: function(event, ui){
+                    $('#field3').val(ui.value/100);
+                    $('#slider3Value').val(ui.value);
+                    $('#myForm').submit();
+                }
+            });
+
+            $('#slider4').slider({
+                min: 0,
+                max: 80,
+                value: 20,
+                slide: function(event, ui){
+                    $('#field4').val(ui.value);
+                    $('#slider4Value').val(ui.value);
+                    $('#myForm').submit();
+                }
+            });
+
+          // Use event delegation for change event
+          $('#myForm').on('change', ':input', function() {
+              // Trigger form submission
+              $('#myForm').submit();
+          });
+
+          
+          $('#myForm').submit(function(event){
+              event.preventDefault(); // Prevent the form from submitting in the traditional way
+
+              var formData = {
+                  'field1' : $('input[name=field1]').val(),
+                  'field2' : $('input[name=field2]').val(),
+                  'field3' : $('input[name=field3]').val(),
+                  'field4' : $('input[name=field4]').val(),
+                  'field5' : $('input[name=field5]:checked').val(),
+                  'field6' : $('input[name=field6]:checked').val()
+              };
+
+              
+              $.ajax({
+                  type: 'GET',
+                  url: server_url,
+                  data: formData,
+                  success: function (data) {
+                  console.log('Success:', data);
+
+                  const obj = JSON.parse(data);
+                  var predictedClass = obj['predicted_class'][0]; // Access the first element of the array
+                  var probabilities = obj['probabilities'][0]; // Access the first element of the nested array
+
+                  // Extract individual probability values
+                  var probability0 = probabilities[0];
+                  var probability1 = probabilities[1];
+
+                  // Display the extracted values
+                  console.log('Predicted Class:', predictedClass);
+                  console.log('Probability 0:', probability0);
+                  console.log('Probability 1:', probability1);
+
+
+                  
+                  // Display the response in the div
+                  $('#predicted_class').html(predictedClass);
+
+                  $('#prob0').html(probability0);
+
+                  $('#prob1').html(probability1);
+
+                  var intention;
+                  var strategy;
+
+                  if (probability1 < 0.25) {
+                      intention = "Purchase Intention: <b>Very Low</b>";
+                      strategy = "Strategy 1: Boost Intention / Show Popular Products";
+                      $('#server_msg').css('background-color', '#f57377'); // Change background color to red
+                  } else if (probability1 >= 0.25 && probability1 < 0.5) {
+                      intention = "Purchase Intention: <b>Low</b>";
+                      strategy = "Strategy 2: Increase Engagement / Cross threshold";
+                      $('#server_msg').css('background-color', '#f5b673'); // Change background color to orange
+                  } else if (probability1 >= 0.5 && probability1 < 0.75) {
+                      intention = "Purchase Intention: <b>High</b>";
+                      strategy = "Strategy 3: Aggressive Discounts / Offers";
+                      $('#server_msg').css('background-color', '#ddf573'); // Change background color to yellow
+                  } else {
+                      intention = "Purchase Intention: <b>Very High</b>";
+                      strategy = "Strategy 4: Personalised offers / Seal the Deal";
+                      $('#server_msg').css('background-color', '#73f584'); // Change background color to green
+                  }
+
+                  $('#server_msg_intention').html(intention);
+                  $('#server_msg_strategy').html(strategy);
+              }
+              });
+
+          });
+      });
+
+    </script>
+</body>
+</html>
