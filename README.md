@@ -1,4 +1,7 @@
-
+Watch Video: 
+<a href='https://www.youtube.com/watch?v=Ds4Z7GiiOeo' target='_blank'>
+   <img src='https://github.com/jiteshsaini/files/blob/main/img/btn_youtube_2.png' height='40px'>
+</a>
 # Project Overview
 The project covers the complete cycle of creating, deploying and interacting with a Machine Learning model. It involves training a Logistics Regression model for a binary classification task and deploying the trained model in a webserver to obtain real-time predictions via rest API using a simple web page (created for this project).
 <img src='https://github.com/jiteshsaini/files/blob/main/img/ml-model-lifecycle.png'>
